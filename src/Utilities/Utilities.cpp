@@ -72,7 +72,7 @@ Utilities::getFoldersInDirectory(const string &directory, vector<string> &folder
         /* print all the files and directories within directory */
         while ((ent = readdir(dir)) != NULL) {
 
-            if (ent->d_type == DT_DIR)
+            if (ent->d_type == DT_DIR && ent->d_name[0] != '.')
                 folders.push_back(ent->d_name);
         }
         closedir(dir);
@@ -80,4 +80,24 @@ Utilities::getFoldersInDirectory(const string &directory, vector<string> &folder
         /* could not open directory */
         perror("Error");
     }
+}
+
+Mat
+Utilities::loadBinaryImage(const string& path) {
+    // Load gray scale image from file
+    Mat grayMat = imread(path, CV_LOAD_IMAGE_GRAYSCALE);
+
+    // Check for invalid input
+    if (grayMat.empty() || !grayMat.data) {
+        cout << path;
+        string errorMessage = "Could not load the image at: " + path;
+        throw exception();
+    }
+    // Binary image
+    Mat binaryMat(grayMat.size(), grayMat.type());
+
+    // Apply thresholding
+    threshold(grayMat, binaryMat, THRESHOLD, 255, THRESH_BINARY);
+
+    return binaryMat;
 }

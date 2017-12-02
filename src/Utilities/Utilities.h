@@ -48,6 +48,10 @@ public:
     /// Returns a list of folders (name) in the given directory
     static void
     getFoldersInDirectory(const string &directory, vector<string> &folders);
+
+    /// Loads binary image from the given path into a matrix of pixels
+    static Mat
+    loadBinaryImage(const string &path);
 };
 
 

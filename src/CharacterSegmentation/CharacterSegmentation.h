@@ -21,26 +21,26 @@ const int MERGE_THRESHOLD = 50;
 const int dirR[8] = { -1, -1, 0, 1, 1, 1, 0, -1 };
 const int dirC[8] = { 0, 1, 1, 1, 0, -1, -1, -1 };
 
-struct Region {
+struct CRegion {
 	int U;	// Up
 	int D;	// Down
 	int L;	// Left
 	int R;	// Right
 	int id;
 
-	Region() {
+	CRegion() {
 		U = L = 1e9;
 		D = R = -1e9;
 	}
 
-	void merge(const Region& rhs) {
+	void merge(const CRegion& rhs) {
 		U = min(U, rhs.U);
 		D = max(D, rhs.D);
 		L = min(L, rhs.L);
 		R = max(R, rhs.R);
 	}
 
-	bool operator<(const Region& rhs) const {
+	bool operator<(const CRegion& rhs) const {
 		if (R == rhs.R)
 			return L > rhs.L;
 		return R < rhs.R;
@@ -52,9 +52,9 @@ private:
 	static int n, m, id;
 	static Mat word;
 	static Mat visited;
-	static vector<Region> regions;
+	static vector<CRegion> regions;
 	static map<int, int> regionsID;
-	static Region region;
+	static CRegion region;
 
 public:
 	static void segment();
@@ -66,7 +66,7 @@ private:
 
 	static void extractChars(vector<Mat>& chars);
 
-	static void mergeRegions();
+	static void mergeCRegions();
 
 	static void dfs(int row, int col);
 

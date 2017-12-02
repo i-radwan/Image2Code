@@ -51,6 +51,7 @@ LineSegmentation::read_image() {
 
 void
 LineSegmentation::pre_process_image() {
+    // ToDo: use Utilities::loadBinaryImage
     // More filters are about to be applied.
     Mat preprocessed_img, smoothed_img;
 

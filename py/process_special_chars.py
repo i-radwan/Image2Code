@@ -8,7 +8,7 @@ from PIL import Image
 
 size = (20,20)
 new_size = (28, 28)
-PATH = '/Users/ibrahimradwan/Desktop/lines/I2C/py/data/symbols/'
+PATH = 'data/symbols/'
 
 def add_chars(training_set, training_results, test_set, test_results):
 	# Add general sybmols

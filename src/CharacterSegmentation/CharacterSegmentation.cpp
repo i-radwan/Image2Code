@@ -10,9 +10,9 @@ int CharacterSegmentation::m;
 int CharacterSegmentation::id;
 Mat CharacterSegmentation::word;
 Mat CharacterSegmentation::visited;
-vector<Region> CharacterSegmentation::regions;
+vector<CRegion> CharacterSegmentation::regions;
 map<int, int> CharacterSegmentation::regionsID;
-Region CharacterSegmentation::region;
+CRegion CharacterSegmentation::region;
 //========================================================================
 
 /**
@@ -39,7 +39,8 @@ void CharacterSegmentation::segment() {
 
             // Read each line and segment to words
             vector<Mat> chars;
-            Mat word = imread(WORD_OUTPUT_PATH + folders[i] + "/" + files[j].first + "." + files[j].second);
+            Mat word = Utilities::loadBinaryImage(
+                    WORD_OUTPUT_PATH + folders[i] + "/" + files[j].first + "." + files[j].second);
 
             // Perform segmentation
             CharacterSegmentation::segment_word(word, chars);
@@ -67,7 +68,7 @@ void CharacterSegmentation::segment_word(Mat &img, vector<Mat> &chars) {
             }
 
             // Get region boundries
-            region = Region();
+            region = CRegion();
             region.id = ++id;
             regionsID[id] = id;
             dfs(i, j);
@@ -77,7 +78,7 @@ void CharacterSegmentation::segment_word(Mat &img, vector<Mat> &chars) {
         }
     }
 
-    mergeRegions();
+    mergeCRegions();
     extractChars(chars);
 }
 
@@ -108,15 +109,15 @@ void CharacterSegmentation::extractChars(vector<Mat> &chars) {
 /**
  * Merge overlapping regions into one region.
  */
-void CharacterSegmentation::mergeRegions() {
-    vector<Region> tmp;
+void CharacterSegmentation::mergeCRegions() {
+    vector<CRegion> tmp;
     sort(regions.rbegin(), regions.rend());
 
     for (int i = 0; i < regions.size(); ++i) {
-        Region &p = regions[i];
+        CRegion &p = regions[i];
 
         for (i++; i < regions.size(); ++i) {
-            Region &q = regions[i];
+            CRegion &q = regions[i];
 
             int commonWidth = q.R - max(p.L, q.L) + 1;
 

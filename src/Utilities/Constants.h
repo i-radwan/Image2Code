@@ -15,7 +15,15 @@
 #define CLASSIFIER_OUTPUT_PATH "../data/5.ClassifierOutput_PPInput/"
 #define CODE_OUTPUT_PATH "../data/6.OutputCode/"
 
+//
+// LINE SEGMENTATION
+//
 #define CHUNKS_NUMBER 20
 #define TEST_LINE_COLOR Vec3b(255, 0, 255) // Magenta color.
+
+//
+// CHAR SEGMENTATION
+//
+#define THRESHOLD 200
 
 #endif //IMAGE2LINES2_CONSTANTS_H

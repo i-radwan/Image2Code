@@ -31,6 +31,7 @@ WordSegmentation::divide_line(string line_path, string output_path, int threshol
     vector<int> x_histogram(cols, 0);
 
     int blankColsCnt = 0;
+    int lastStartWhite = -1;
     int lastFirstBlack = -1;
     int cnt = 0;
     for (int i = 0; i < cols; ++i) {
@@ -40,21 +41,25 @@ WordSegmentation::divide_line(string line_path, string output_path, int threshol
 
         if (x_histogram[i] == 0) { // No black in this col
             blankColsCnt++;
+            if (i == 0 || x_histogram[i - 1] > 0)
+                lastStartWhite = i;
         } else {
             if (blankColsCnt >= threshold && lastFirstBlack > -1) {
                 Mat word = line_img(
-                        Rect(max(0, lastFirstBlack - 1), 0, i - 1 - max(0, lastFirstBlack - 1), rows - 1));
+                        Rect(max(0, lastFirstBlack - 1), 0, lastStartWhite - max(0, lastFirstBlack - 1), rows - 1));
                 imwrite(output_path + to_string(cnt++) + ".jpg", word);
                 lastFirstBlack = 0 - 1;
             }
 
             if (lastFirstBlack == -1) lastFirstBlack = i;
             blankColsCnt = 0;
+            lastStartWhite = 0;
         }
     }
     // Save last word
+    if (lastStartWhite == 0) lastStartWhite = cols - 1;
     if (blankColsCnt >= threshold && lastFirstBlack > -1) {
-        Mat word = line_img(Rect(max(0, lastFirstBlack - 1), 0, cols - 1 - max(0, lastFirstBlack - 1), rows - 1));
+        Mat word = line_img(Rect(max(0, lastFirstBlack - 1), 0, lastStartWhite - max(0, lastFirstBlack - 1), rows - 1));
         imwrite(output_path + to_string(cnt) + ".jpg", word);
     }
 }
