@@ -29,9 +29,9 @@ class classifier(object):
 				for char in sorted(np.array(get_files_list(PATH+str(line)+"/"+str(word)+"/", True))):
 					self.prepare_input(PATH+str(line)+"/"+str(word)+"/"+str(char)+".jpg", True)
 					res = self.classify(net)
-					
-					code += chr(int(key[(np.argmax(res))][1]))
-					print (PATH+str(line)+"/"+str(word)+"/"+str(char)+".jpg", chr(int(key[(np.argmax(res))][1])), (-res).argpartition(10, axis=None)[:10])
+
+					code += chr(int(key[np.argmax(res)][1]))
+					print (PATH+str(line)+"/"+str(word)+"/"+str(char)+".jpg", chr(int(key[np.argmax(res)][0])), np.argsort(-res, axis=None)[:10], np.array(sorted(-res)[:10]).tolist())
 
 				print (' ')
 				code += ' '
@@ -69,6 +69,7 @@ class classifier(object):
 
 		self.y = out.reshape((28 * 28, -1)).astype(np.float32)/255.0
 
+#### Miscellaneous functions
 def get_files_list(path, remove_ext = False):
 	li = list()
 	for t in (listdir(path)):

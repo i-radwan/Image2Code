@@ -39,7 +39,7 @@ WordSegmentation::divide_line(string line_path, string output_path, int threshol
             x_histogram[i] += ((line_img.at<uchar>(j, i) == 0) ? 1 : 0);
         }
 
-        if (x_histogram[i] == 0) { // No black in this col
+        if (x_histogram[i] <= 0) { // No black in this col
             blankColsCnt++;
             if (i == 0 || x_histogram[i - 1] > 0)
                 lastStartWhite = i;

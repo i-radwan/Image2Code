@@ -72,8 +72,10 @@ LineSegmentation::divide_image_into_regions() {
     int cols = this->binary_img.cols;
 
     bool white_counted = false;
+    bool no_black;
     for (int r = 0; r < rows; ++r) {
-        bool no_black = true;
+        no_black = true;
+
         for (int c = 0; c < cols && no_black; ++c) {
             if (this->binary_img.at<uchar>(r, c) < 180) no_black = false;
         }
@@ -81,10 +83,14 @@ LineSegmentation::divide_image_into_regions() {
             white_counted = 1;
             separation_rows.push_back(r);
         } else if (!no_black) {
+            if (!r)
+                separation_rows.push_back(r);
+
             white_counted = 0;
         }
     }
-
+    if (!no_black)
+        separation_rows.push_back(rows - 1);
     // Store regions
     vector<Mat> regions;
     for (int i = 0; i < separation_rows.size() - 1; ++i) {

@@ -17,16 +17,13 @@ using namespace cv;
 // Constants
 const int BACKCOLOR = 255;
 const int FORECOLOR = 0;
-const int MERGE_THRESHOLD = 50;
+const int MERGE_THRESHOLD = 40;
 const int dirR[8] = { -1, -1, 0, 1, 1, 1, 0, -1 };
 const int dirC[8] = { 0, 1, 1, 1, 0, -1, -1, -1 };
 
 struct CRegion {
-	int U;	// Up
-	int D;	// Down
-	int L;	// Left
-	int R;	// Right
 	int id;
+	int U, D, L, R;	// Up, Down, Left, Right
 
 	CRegion() {
 		U = L = 1e9;
@@ -42,7 +39,7 @@ struct CRegion {
 
 	bool operator<(const CRegion& rhs) const {
 		if (R == rhs.R)
-			return L > rhs.L;
+			return L < rhs.L;
 		return R < rhs.R;
 	}
 };
@@ -60,7 +57,7 @@ public:
 	static void segment();
 
 private:
-	CharacterSegmentation() {}	// Private constructor
+	CharacterSegmentation() {}	// Private constructor (i.e. static class)
 
 	static void segment_word(Mat& img, vector<Mat>& chars);
 

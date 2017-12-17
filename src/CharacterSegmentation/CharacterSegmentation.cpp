@@ -83,8 +83,8 @@ void CharacterSegmentation::segment_word(Mat &img, vector<Mat> &chars) {
 }
 
 /**
- * Extract regions of the same id into a matrix
- * and add it to the chars vector.
+ * Extract regions of the same id into a matrix, exculding overlapping regions
+ * of different ids, and add it to the chars vector.
  */
 void CharacterSegmentation::extractChars(vector<Mat> &chars) {
     for (auto &r : regions) {
@@ -111,29 +111,34 @@ void CharacterSegmentation::extractChars(vector<Mat> &chars) {
  */
 void CharacterSegmentation::mergeCRegions() {
     vector<CRegion> tmp;
-    sort(regions.rbegin(), regions.rend());
+    sort(regions.begin(), regions.end());
 
     for (int i = 0; i < regions.size(); ++i) {
-        CRegion &p = regions[i];
+        tmp.push_back(regions[i]);
 
-        for (i++; i < regions.size(); ++i) {
-            CRegion &q = regions[i];
+        if (i + 1 >= regions.size()) {
+            break;
+        }
 
-            int commonWidth = q.R - max(p.L, q.L) + 1;
+        CRegion& p = tmp.back();
+        CRegion& q = regions[i + 1];
 
-            if (commonWidth * 100 < (p.R - p.L + 1) * MERGE_THRESHOLD) {
-                i--;
-                break;
-            }
+        int commonHeight = min(p.D, q.D) - max(p.U, q.U) + 1;
+        int commonWidth = p.R - max(p.L, q.L) + 1;
+        int space = q.L - p.R + 1;
+        int width = min(q.R - q.L, p.R - p.L) + 1;
 
+        if (commonHeight > 0) {
+            continue;
+        }
+
+        if (commonWidth >= 0 || space * 100 <= width * MERGE_THRESHOLD) {
+            i++;
             regionsID[q.id] = p.id;
             p.merge(q);
         }
-
-        tmp.push_back(p);
     }
 
-    reverse(tmp.begin(), tmp.end());
     regions.swap(tmp);
 }
 
@@ -148,7 +153,7 @@ void CharacterSegmentation::dfs(int row, int col) {
     region.D = max(region.D, row);
     region.R = max(region.R, col);
 
-    // Set current pixel as visisted
+    // Set current pixel as visisted with current component id
     visited.at<uchar>(row, col) = id;
 
     // Visit neighbours

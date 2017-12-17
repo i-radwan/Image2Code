@@ -1,0 +1,29 @@
+#antu&e (lostfeqm>
+“5:03 ﬂamequce stA;
+
+const int N : 2&0200;
+
+Long long :1, Sum; Lnt n,K,L, cat, aLN];
+
+int main (Ii
+
+cln >>n>>K3
+
+For (L:®;i<n3++'\.)i
+
+cin >> a [L];
+
+3
+For (i=0; L<n;++i.)‘{_
+ol = Sun- (L-Cnt) x (n-1—1Ll) n «Lib
+
+1F (Audi
+cntr+j
+
+cout << 1+1 << emit;
+
+3
+
+elsci
+$um+: aLL]* 1LL» U-Cﬁt)i
+

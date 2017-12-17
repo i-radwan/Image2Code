@@ -37,3 +37,4 @@ py/data/
 .DS_Store
 
 *.pyc
+data/

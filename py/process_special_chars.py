@@ -8,7 +8,7 @@ from PIL import Image
 
 size = (20,20)
 new_size = (28, 28)
-PATH = 'data/symbols/'
+PATH = '/Users/ibrahimradwan/Desktop/symbols/'
 
 def add_chars(training_set, training_results, test_set, test_results):
 	# Add general sybmols
@@ -27,10 +27,10 @@ def add_chars(training_set, training_results, test_set, test_results):
 
 		# Add the frame -> new image 28*28
 		new_im = Image.new("L", new_size)
-		new_im.paste(x, ((new_size[0]-size[0])/2, (new_size[1]-size[1])/2))
+		new_im.paste(x, (int((new_size[0]-size[0])/2), int((new_size[1]-size[1])/2)))
 
 		img = np.array(new_im)
-
+		img = np.rot90(np.rot90(np.rot90(img)))
 		# Apply transformations to add to the traning set
 		img = np.rot90(np.fliplr(img))
 
@@ -57,9 +57,10 @@ def add_chars(training_set, training_results, test_set, test_results):
 
 		# Add the frame -> new image 28*28
 		new_im = Image.new("L", new_size)
-		new_im.paste(x, ((new_size[0]-size[0])/2, (new_size[1]-size[1])/2))
+		new_im.paste(x, (int((new_size[0]-size[0])/2), int((new_size[1]-size[1])/2)))
 
 		img = np.array(new_im)
+		img = np.rot90(img)
 
 		# Apply transformations to add to the traning set
 		img = np.rot90(np.fliplr(img))
@@ -91,7 +92,7 @@ def add_chars(training_set, training_results, test_set, test_results):
 
 		# Add the frame -> new image 28*28
 		new_im = Image.new("L", new_size)
-		new_im.paste(new_x, ((new_size[0]-size[0])/2, int((new_size[1]-size[1])/2)))
+		new_im.paste(new_x, (int((new_size[0]-size[0])/2), int((new_size[1]-size[1])/2)))
 
 		#print np.array(new_im)
 		img = np.array(new_im)
@@ -131,7 +132,7 @@ def add_special_chars_to_training_set(training_set, training_results, test_set, 
 
 				# Add the frame -> new image 28*28
 				new_im = Image.new("L", new_size)
-				new_im.paste(x, ((new_size[0]-size[0])/2, (new_size[1]-size[1])/2))
+				new_im.paste(x, (int((new_size[0]-size[0])/2), int((new_size[1]-size[1])/2)))
 			else: new_im = x
 
 			img = np.array(new_im)
@@ -201,9 +202,8 @@ def add_special_chars_to_training_set(training_set, training_results, test_set, 
 				symbolKey = 93
 			else:
 				symbolKey = (ord(symbol))
-			if (len(img) != 28): 
-				print (((PATH + str(symbol)) + '/' + img))
-			# Append to dataset
+			
+            # Append to dataset
 			if (i < (5.0/6) * cnt):
 				training_set.append(img)
 				training_results.append(symbolKey)
@@ -213,4 +213,3 @@ def add_special_chars_to_training_set(training_set, training_results, test_set, 
 				test_results.append(symbolKey)
 			i+=1
 	return training_set, training_results, test_set, test_results
-		

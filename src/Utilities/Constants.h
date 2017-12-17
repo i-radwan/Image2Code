@@ -8,7 +8,7 @@
 //
 // PATHS
 //
-#define INPUT_IMG "../data/1.LineInput/input.jpg"
+#define INPUT_IMG "../data/1.LineInput/inputnp.savez_compressed('small_mapping.npz', key=a).jpg"
 #define LINE_OUTPUT_PATH "../data/2.LineOutput_WordInput/"
 #define WORD_OUTPUT_PATH "../data/3.WordOutput_CharacterInput/"
 #define CHARACTER_OUTPUT_PATH "../data/4.CharacterOutput_ClassifierInput/"

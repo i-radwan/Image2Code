@@ -43,6 +43,7 @@ def load_data():
     below.
     """
 
+    # Load only digits and lower and upper case letters
     mndata = MNIST('data')
     trX, trY = mndata.load_training()
     teX, teY = mndata.load_testing()
