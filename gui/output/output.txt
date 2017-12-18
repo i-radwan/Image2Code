@@ -1,4 +1,4 @@
-#include (bitS/std(++ . h)
+#include <bits/stdc++.h>
 
 using namespace std;
 
@@ -6,11 +6,11 @@ int main() {
 int n, m, h, id, day;
 set<int> ans;
 
-scanf("%d %d zd", &n, &m, &h);
+scanf("%d %d %d", &n, &m, &h);
 
-for (int i : e; i < h; ++i) {
-scanf(“%d zd", &id, &day);
-if (day > n 7 m) {
+for (int i = e; i < h; ++i) (
+scanf("%d %d", &id, &day);
+if (day > n - m) {
 
 ans.insert(id);
 
@@ -18,5 +18,5 @@ ans.insert(id);
 
 cout << ans.size();
 
-return 6;
+return 0;
 

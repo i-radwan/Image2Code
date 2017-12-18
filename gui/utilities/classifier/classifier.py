@@ -35,6 +35,7 @@ class Classifier(object):
         'goto',
         'if',
         'inline',
+        'include',
         'int',
         'long',
         'mutable',
@@ -120,7 +121,9 @@ class Classifier(object):
 		for char in sorted(np.array(listdir(path))):
 			if (char[0]=='.'): continue
 
-			img = self.prepare_input(path + char, False)
+			img, valid = self.prepare_input(path + char, False)
+
+			if (not valid): continue
 
 			if (char.split(".")[0][0:2] != last_line_id):
 				self.result.append([[]])
@@ -129,12 +132,12 @@ class Classifier(object):
 
 			if (char.split(".")[0][-1] == "x"): # Special char
 				res = self.special_net.feedforward(img)
-				print (path + char, chr(int(self.special_key[np.argmax(res)])), get_special_vec_values(np.argsort(-res, axis=None)[:10]), np.array(sorted(-res)[:10]).tolist(), '\n')
+				# print (path + char, chr(int(self.special_key[np.argmax(res)])), get_special_vec_values(np.argsort(-res, axis=None)[:10]), np.array(sorted(-res)[:10]).tolist(), '\n')
 				self.result[-1][-1].append((get_special_vec_values(np.argsort(-res, axis=None)[:5]), np.array(sorted(-res)[:5]).tolist()))
 
 			else :
 				res = self.small_net.feedforward(img)
-				print (path + char, chr(int(self.small_key[np.argmax(res)])), get_small_vec_values(np.argsort(-res, axis=None)[:10]), np.array(sorted(-res)[:10]).tolist(), '\n')
+				# print (path + char, chr(int(self.small_key[np.argmax(res)])), get_small_vec_values(np.argsort(-res, axis=None)[:10]), np.array(sorted(-res)[:10]).tolist(), '\n')
 				self.result[-1][-1].append((get_small_vec_values(np.argsort(-res, axis=None)[:5]), np.array(sorted(-res)[:5]).tolist()))
 
 			last_line_id = char.split(".")[0][0:2]
@@ -143,7 +146,11 @@ class Classifier(object):
 		return self.post_processing()
 
 	def post_processing(self):
-		result = np.array(self.result)
+
+		try:
+			result = np.array(self.result)
+		except:
+			return ""
 
 		processed_result = []
 
@@ -239,7 +246,7 @@ class Classifier(object):
 						if(len(characters_only_word) > 0):
 							code += self.get_nearset_word(characters_only_word)
 							characters_only_word = ""
-							
+
 						code += char
 
 				if (len(characters_only_word)):
@@ -271,13 +278,15 @@ class Classifier(object):
 		else:
 			ratio = 20.0/cols
 			new_dimes = int(rows * ratio), 20
-			
+		
+		if (len(x) == 0 or len(x[0]) == 0 or new_dimes[0] == 0 or new_dimes[1] == 0): return (None, False)
+
 		x = sp.imresize(x, new_dimes, 'nearest', 'L')
 
 		out = np.zeros((28,28), dtype=np.int)
 		out[14-int(math.floor(new_dimes[0]/2.0)):14+int(math.ceil(new_dimes[0]/2.0)), 14-int(math.floor(new_dimes[1]/2.0)):14+int(math.ceil(new_dimes[1]/2.0))] = x
 
-		return out.reshape((28 * 28, -1)).astype(np.float32)/255.0
+		return (out.reshape((28 * 28, -1)).astype(np.float32)/255.0, True)
 
 	def get_small_value(self, k):
 		return chr(self.small_key[k])

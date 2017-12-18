@@ -27,6 +27,7 @@ class Image2Code(QWidget):
     OUTPUT_TXT_FILE = "output/output.txt"
 
     SEGMENTATION_IMG = "preprocessing/tmp/Preprocess/segmented.jpg"
+    SEGMENTATION_PAPER = "preprocessing/tmp/Preprocess/paper.jpg"
     SEGMENTATION_EXE_FILE = "preprocessing/Image2Code"
 
     MODE_PRINTED = 0
@@ -52,6 +53,10 @@ class Image2Code(QWidget):
 
         self.mode = Image2Code.MODE_HANDWRITING
         self.segmetedPicReady = False
+
+        # Animation
+        self.convertingTask = TaskThread()
+        self.convertingTask.taskFinished.connect(self.onConversionFinished)
 
         self.setFixedSize(self.width, self.height)
         self.initUI()
@@ -235,16 +240,14 @@ class Image2Code(QWidget):
 
         if (len(self.imagePath.strip()) == 0): return
 
-        if (self.mode == Image2Code.MODE_PRINTED):
-            self.convertPrinted()
-        else:
-            self.convertHandwritten()
-
+        self.onConversionStarted()
 
     def convertPrinted(self):
+        # Segmentation
+        subprocess.run(['./' + Image2Code.SEGMENTATION_EXE_FILE, self.imagePath], stdout=subprocess.PIPE)
 
         # Run Tesseract
-        result = subprocess.run(['tesseract', self.imagePath, Image2Code.OUTPUT_TXT_PATH], stdout=subprocess.PIPE)
+        result = subprocess.run(['tesseract', Image2Code.SEGMENTATION_PAPER, Image2Code.OUTPUT_TXT_PATH], stdout=subprocess.PIPE)
 
         with open(Image2Code.OUTPUT_TXT_FILE, 'r') as codeFile:
             code = codeFile.read()
@@ -369,6 +372,12 @@ class Image2Code(QWidget):
         inactive.hoverBKColor="#c8e0e0e0"
         inactive.setStyleSheet("border-radius: 0px;  font-family: Courier New; color: #000000; font-size: 18px; background: #e0e0e0; padding: 8px 18px 8px 18px; text-decoration: none;")
 
+    def onConversionStarted(self): 
+        self.overlay.show()
+        self.convertingTask.start()
+
+    def onConversionFinished(self):
+        self.overlay.hide()
 
 class HoverButton(QToolButton):
 
@@ -390,6 +399,19 @@ class HoverButton(QToolButton):
     def leaveEvent(self,event):
 
         self.setStyleSheet("border-radius: 0px;  font-family: Courier New; color: " + self.color + "; font-size: "+self.fontSize+"; background: " + self.BKColor + "; padding: " + self.padding + "; text-decoration: none;")
+
+class TaskThread(QtCore.QThread):
+
+    taskFinished = QtCore.pyqtSignal()
+    
+    def run(self):
+        
+        if (ex.mode == Image2Code.MODE_PRINTED):
+            ex.convertPrinted()
+        else:
+            ex.convertHandwritten()
+
+        self.taskFinished.emit()  
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
