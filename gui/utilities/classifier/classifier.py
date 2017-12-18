@@ -120,7 +120,7 @@ class Classifier(object):
 		for char in sorted(np.array(listdir(path))):
 			if (char[0]=='.'): continue
 
-			img = self.prepare_input(path + char, True)
+			img = self.prepare_input(path + char, False)
 
 			if (char.split(".")[0][0:2] != last_line_id):
 				self.result.append([[]])
@@ -129,12 +129,12 @@ class Classifier(object):
 
 			if (char.split(".")[0][-1] == "x"): # Special char
 				res = self.special_net.feedforward(img)
-				# print (path + char, chr(int(self.special_key[np.argmax(res)])), get_special_vec_values(np.argsort(-res, axis=None)[:10]), np.array(sorted(-res)[:10]).tolist(), '\n')
+				print (path + char, chr(int(self.special_key[np.argmax(res)])), get_special_vec_values(np.argsort(-res, axis=None)[:10]), np.array(sorted(-res)[:10]).tolist(), '\n')
 				self.result[-1][-1].append((get_special_vec_values(np.argsort(-res, axis=None)[:5]), np.array(sorted(-res)[:5]).tolist()))
 
 			else :
 				res = self.small_net.feedforward(img)
-				# print (path + char, chr(int(self.small_key[np.argmax(res)])), get_small_vec_values(np.argsort(-res, axis=None)[:10]), np.array(sorted(-res)[:10]).tolist(), '\n')
+				print (path + char, chr(int(self.small_key[np.argmax(res)])), get_small_vec_values(np.argsort(-res, axis=None)[:10]), np.array(sorted(-res)[:10]).tolist(), '\n')
 				self.result[-1][-1].append((get_small_vec_values(np.argsort(-res, axis=None)[:5]), np.array(sorted(-res)[:5]).tolist()))
 
 			last_line_id = char.split(".")[0][0:2]
@@ -185,11 +185,11 @@ class Classifier(object):
 						new_word += char[0][1]
 					
 					# },],) -> ;
-					elif ((char[0][0] == '}' or char[0][0] == ')' or char[0][0] == ']') and char[0][1] == ';' and ((char[1][0][0] / char[1][1][0]) < 3 or (lc and w == len(line) - 1))):
+					elif ((char[0][0] == '}' or char[0][0] == ')' or char[0][0] == ']') and char[0][1] == ';' and (char[1][0][0] / char[1][1][0]) < 3):
 						new_word += ';'
 
 					# ; -> },],)
-					elif ((char[0][1] == '}' or char[0][1] == ')' or char[0][1] == ']') and char[0][0] == ';' and ((char[1][0][0] / char[1][1][0]) < 3 and (w != len(line) - 1 or not lc))):
+					elif ((char[0][1] == '}' or char[0][1] == ')' or char[0][1] == ']') and char[0][0] == ';' and (w != len(line) - 1 or not lc)):
 						new_word += char[0][1]
 					
 					# . * -> +
@@ -229,11 +229,21 @@ class Classifier(object):
 		# Repalce with keywords
 		for line in processed_result:
 			for w, word in enumerate(line):
+	
+				characters_only_word = ""
+				for c, char in enumerate(word):
+					if (is_char(char) or is_digit(char)):
+						characters_only_word += char
 
-				near_words = difflib.get_close_matches(word, Classifier.keywords, cutoff=0.75)
-				if (len(near_words) > 0 and len(near_words[0]) == len(word)):
-					code += near_words[0]
-				else: code += word
+					else:
+						if(len(characters_only_word) > 0):
+							code += self.get_nearset_word(characters_only_word)
+							characters_only_word = ""
+							
+						code += char
+
+				if (len(characters_only_word)):
+					code += self.get_nearset_word(characters_only_word)
 
 				if (w != len(line) - 1): code += ' '
 			code += '\n'
@@ -274,6 +284,21 @@ class Classifier(object):
 
 	def get_special_value(self, k):
 		return chr(self.special_key[k])
+
+	def get_nearset_word(self, word):
+		nearest_word = word
+
+		for w in self.keywords:
+			if (len(w) != len(word)) : continue
+			
+			diff = 0
+			for c, char in enumerate(word):
+				diff += int(char != w[c])
+
+			if (diff <= 1): 
+				nearest_word = w
+
+		return nearest_word
 
 def is_char(c):
 	return c >= 'a' and c <= 'z'

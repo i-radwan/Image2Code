@@ -257,9 +257,7 @@ class Image2Code(QWidget):
 
 
     def convertHandwritten(self):
-        self.overlay.show()
-        # Preprocessing
-
+        
         # Segmentation
         subprocess.run(['./' + Image2Code.SEGMENTATION_EXE_FILE, self.imagePath], stdout=subprocess.PIPE)
 
@@ -273,7 +271,6 @@ class Image2Code(QWidget):
         self.displaySegmentedImage()
         self.segmetedPicReady = True
 
-        self.overlay.hide()
         return
 
     def compile(self):

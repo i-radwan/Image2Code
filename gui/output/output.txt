@@ -1,29 +1,22 @@
-#antu&e (lostfeqm>
-“5:03 ﬂamequce stA;
+#include (bitS/std(++ . h)
 
-const int N : 2&0200;
+using namespace std;
 
-Long long :1, Sum; Lnt n,K,L, cat, aLN];
+int main() {
+int n, m, h, id, day;
+set<int> ans;
 
-int main (Ii
+scanf("%d %d zd", &n, &m, &h);
 
-cln >>n>>K3
+for (int i : e; i < h; ++i) {
+scanf(“%d zd", &id, &day);
+if (day > n 7 m) {
 
-For (L:®;i<n3++'\.)i
+ans.insert(id);
 
-cin >> a [L];
+}
 
-3
-For (i=0; L<n;++i.)‘{_
-ol = Sun- (L-Cnt) x (n-1—1Ll) n «Lib
+cout << ans.size();
 
-1F (Audi
-cntr+j
-
-cout << 1+1 << emit;
-
-3
-
-elsci
-$um+: aLL]* 1LL» U-Cﬁt)i
+return 6;
 
