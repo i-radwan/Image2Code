@@ -1,22 +1,15 @@
-#include <bits/stdc++.h>
-
+#include <iostream>
 using namespace std;
-
-int main() {
-int n, m, h, id, day;
-set<int> ans;
-
-scanf("%d %d %d", &n, &m, &h);
-
-for (int i = e; i < h; ++i) (
-scanf("%d %d", &id, &day);
-if (day > n - m) {
-
-ans.insert(id);
-
+bool isprime(int n) {
+if(n<2) return false;
+for(int i= 2; i*i<=n; ++i)
+if (n%i== 0)
+return false;
+return true;
 }
-
-cout << ans.size();
-
+int main () {
+int x;
+cin >>x ;
+cout << isprime(x);
 return 0;
-
+}

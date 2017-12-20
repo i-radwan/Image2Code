@@ -241,6 +241,7 @@ class Image2Code(QWidget):
         if (len(self.imagePath.strip()) == 0): return
 
         self.onConversionStarted()
+        self.segmetedPicReady = True
 
     def convertPrinted(self):
         # Segmentation
@@ -272,7 +273,6 @@ class Image2Code(QWidget):
 
         # Display segmented image
         self.displaySegmentedImage()
-        self.segmetedPicReady = True
 
         return
 
