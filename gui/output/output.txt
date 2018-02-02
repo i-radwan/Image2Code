@@ -1,22 +1,26 @@
-#include <bits/stdc++.h>
-
+#include <stdio.h>
+#include <iostream>
 using namespace std;
-
+int a, b, c, d, mx, md, mn;
 int main() {
-int n, m, h, id, day;
-set<int> ans;
+while (cin >> a >> b >> c >> d) (
 
-scanf("%d %d %d", &n, &m, &h);
+mx = 2 * a;
 
-for (int i = e; i < h; ++i) (
-scanf("%d %d", &id, &day);
-if (day > n - m) {
+md = 2 * b;
 
-ans.insert(id);
+mn = c < d ? c : d;
 
-}
+mn *= 2;
 
-cout << ans.size();
+1f (d > mn II c > mn || 2*d >= mx || 2*d >= md) (
+
+cout << "—1" << endl;
+)
+else (
+cout << mx << endl << md << endl << mn << endl;
+)
+)
 
 return 0;
 
