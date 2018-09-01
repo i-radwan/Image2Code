@@ -97,7 +97,7 @@ Utilities::loadBinaryImage(const string& path) {
     Mat binaryMat(grayMat.size(), grayMat.type());
 
     // Apply thresholding
-    threshold(grayMat, binaryMat, THRESHOLD, 255, THRESH_BINARY);
+    threshold(grayMat, binaryMat, CHAR_COLOR_THRESHOLD, 255, THRESH_BINARY);
 
     return binaryMat;
 }
