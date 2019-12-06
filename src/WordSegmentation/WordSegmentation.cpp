@@ -17,7 +17,7 @@ WordSegmentation::segment() {
         // Read each line and segment to words
         this->divide_line(LINE_OUTPUT_PATH + files[i].first + "." + files[i].second,
                           WORD_OUTPUT_PATH + files[i].first + "/",
-                          45);
+                          WORD_SPACING_THRESHOLD);
     }
 }
 
@@ -48,16 +48,20 @@ WordSegmentation::divide_line(string line_path, string output_path, int threshol
                 Mat word = line_img(
                         Rect(max(0, lastFirstBlack - 1), 0, lastStartWhite - max(0, lastFirstBlack - 1), rows - 1));
                 imwrite(output_path + to_string(cnt++) + ".jpg", word);
+                
                 lastFirstBlack = 0 - 1;
             }
 
             if (lastFirstBlack == -1) lastFirstBlack = i;
+            
             blankColsCnt = 0;
             lastStartWhite = 0;
         }
     }
+
     // Save last word
     if (lastStartWhite == 0) lastStartWhite = cols - 1;
+
     if (blankColsCnt >= threshold && lastFirstBlack > -1) {
         Mat word = line_img(Rect(max(0, lastFirstBlack - 1), 0, lastStartWhite - max(0, lastFirstBlack - 1), rows - 1));
         imwrite(output_path + to_string(cnt) + ".jpg", word);
