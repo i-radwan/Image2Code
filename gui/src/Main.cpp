@@ -39,7 +39,7 @@ int main(int argc, char* argv[]) {
 		cout << "Segmenting image..." << endl;
 
 //		imwrite("/Users/ibrahimradwan/Desktop/lines/Image2Code/Image2Code/cmake-build-debug/preprocessing/tmp/Preprocess/t.jpg", Preprocessor::image_original_transformed);
-		Segmentation::segment(Preprocessor::image_original_transformed, Preprocessor::image_sauvola);
+// 		Segmentation::segment(Preprocessor::image_original_transformed, Preprocessor::image_sauvola);
 	}
 	catch (const exception& ex) {
 		cout << "ERROR::" << ex.what() << endl;

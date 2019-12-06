@@ -262,6 +262,7 @@ class Image2Code(QWidget):
 
     def convertHandwritten(self):
         
+        print('./' + Image2Code.SEGMENTATION_EXE_FILE, self.imagePath)
         # Segmentation
         subprocess.run(['./' + Image2Code.SEGMENTATION_EXE_FILE, self.imagePath], stdout=subprocess.PIPE)
 
